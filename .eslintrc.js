@@ -23,6 +23,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'eol-last': ['error', 'always'],
     semi: ['error', 'always'],
-    quotes: ['error', 'single'],
+    quotes: ['error', 'single', { allowTemplateLiterals: true }],
   },
 };

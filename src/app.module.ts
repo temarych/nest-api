@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { PostModule } from './post/post.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PostModule } from './post/post.module';
       synchronize: true,
     }),
     PostModule,
+    UserModule,
   ],
 })
 export class AppModule {

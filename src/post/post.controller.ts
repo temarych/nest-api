@@ -18,17 +18,17 @@ export class PostController {
 
   @Post()
   public async create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+    return await this.postService.create(createPostDto);
   }
 
   @Get()
   public async findAll() {
-    return this.postService.findAll();
+    return await this.postService.findAll();
   }
 
   @Get(':id')
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.postService.findOne(id);
+    return await this.postService.findOne(id);
   }
 
   @Patch(':id')
@@ -36,11 +36,11 @@ export class PostController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePostDto: UpdatePostDto,
   ) {
-    return this.postService.update(id, updatePostDto);
+    await this.postService.update(id, updatePostDto);
   }
 
   @Delete(':id')
   public async remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.postService.remove(id);
+    await this.postService.remove(id);
   }
 }

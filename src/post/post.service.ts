@@ -20,12 +20,12 @@ export class PostService {
     return await this.postRepository.find();
   }
 
-  public async findOne(id: string) {
+  public async findOne(id: string): Promise<Post> {
     return await this.postRepository.findOneBy({ id });
   }
 
-  public async update(id: string, updatePostDto: UpdatePostDto) {
-    return await this.postRepository.update(id, updatePostDto);
+  public async update(id: string, updatePostDto: UpdatePostDto): Promise<void> {
+    await this.postRepository.update(id, updatePostDto);
   }
 
   public async remove(id: string): Promise<void> {

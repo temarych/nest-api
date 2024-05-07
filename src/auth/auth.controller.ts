@@ -24,7 +24,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Successful operation',
-    type: [SignUpResponseDto],
+    type: SignUpResponseDto,
   })
   public async signUp(@Body() data: SignUpRequestDto) {
     const [result, error] = await this.authService.signUp(data);
@@ -45,7 +45,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Successful operation',
-    type: [LogInResponseDto],
+    type: LogInResponseDto,
   })
   public async logIn(@Body() data: LogInRequestDto) {
     const [result, error] = await this.authService.logIn(data);

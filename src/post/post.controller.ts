@@ -10,6 +10,7 @@ import {
   NotFoundException,
   UseGuards,
 } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@/auth/auth.guard';
 import { PostService } from './post.service';
 import { CreatePostRequestDto } from './dto/create-post.request.dto';
@@ -22,18 +23,48 @@ export class PostController {
 
   @Post()
   @UseGuards(AuthGuard)
+  @ApiOperation({
+    summary: 'Create post',
+    operationId: 'createPost',
+    tags: ['post'],
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful operation',
+    type: PostDto,
+  })
   public async create(@Body() data: CreatePostRequestDto) {
     const post = await this.postService.create(data);
     return new PostDto(post);
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'Get posts',
+    operationId: 'getPosts',
+    tags: ['post'],
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful operation',
+    type: [PostDto],
+  })
   public async findAll() {
     const posts = await this.postService.findAll();
     return posts.map((post) => new PostDto(post));
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get post',
+    operationId: 'getPost',
+    tags: ['post'],
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful operation',
+    type: PostDto,
+  })
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const post = await this.postService.findOne(id);
     if (!post) throw new NotFoundException('post-not-found');
@@ -42,6 +73,15 @@ export class PostController {
 
   @Patch(':id')
   @UseGuards(AuthGuard)
+  @ApiOperation({
+    summary: 'Update post',
+    operationId: 'updatePost',
+    tags: ['post'],
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful operation',
+  })
   public async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: UpdatePostRequestDto,
@@ -51,6 +91,15 @@ export class PostController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
+  @ApiOperation({
+    summary: 'Remove post',
+    operationId: 'removePost',
+    tags: ['post'],
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful operation',
+  })
   public async remove(@Param('id', ParseUUIDPipe) id: string) {
     await this.postService.remove(id);
   }

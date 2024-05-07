@@ -1,4 +1,5 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { SignUpRequestDto } from './dto/signup.request.dto';
 import { LogInRequestDto } from './dto/login.request.dto';
@@ -15,6 +16,16 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signup')
+  @ApiOperation({
+    summary: 'Sign up',
+    operationId: 'signup',
+    tags: ['auth'],
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful operation',
+    type: [SignUpResponseDto],
+  })
   public async signUp(@Body() data: SignUpRequestDto) {
     const [result, error] = await this.authService.signUp(data);
 
@@ -26,6 +37,16 @@ export class AuthController {
   }
 
   @Post('/login')
+  @ApiOperation({
+    summary: 'Log in',
+    operationId: 'login',
+    tags: ['auth'],
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful operation',
+    type: [LogInResponseDto],
+  })
   public async logIn(@Body() data: LogInRequestDto) {
     const [result, error] = await this.authService.logIn(data);
 

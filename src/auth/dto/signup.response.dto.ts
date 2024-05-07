@@ -1,10 +1,10 @@
-import { Expose } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
-@Expose()
 export class SignUpResponseDto {
+  @ApiProperty()
   public accessToken: string;
 
   constructor(data: SignUpResponseDto) {
-    Object.assign(this, data);
+    this.accessToken = data.accessToken;
   }
 }

@@ -15,6 +15,7 @@ const bootstrap = async () => {
     .setDescription('The NEST API description')
     .setVersion('1.0')
     .addServer(process.env.PUBLIC_URL as string)
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

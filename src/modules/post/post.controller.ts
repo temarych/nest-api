@@ -16,16 +16,17 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiSecurity,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { User } from '@modules/user/entities/user.entity';
 import { AuthGuard } from '@modules/auth/auth.guard';
 import { ApiErrorCause } from '@typings/ApiErrorCause';
+import { ApiErrorDto } from '@typings/ApiErrorDto';
 import { PostService } from './post.service';
 import { CreatePostRequestDto } from './dto/create-post.request.dto';
 import { UpdatePostRequestDto } from './dto/update-post.request.dto';
 import { PostDto } from './dto/post.dto';
-import { ApiErrorDto } from '@typings/ApiErrorDto';
 
 @Controller('posts')
 export class PostController {
@@ -38,6 +39,7 @@ export class PostController {
     operationId: 'createPost',
     tags: ['post'],
   })
+  @ApiSecurity('bearer')
   @ApiOkResponse({ type: PostDto })
   @ApiUnauthorizedResponse({ type: ApiErrorDto })
   @ApiBadRequestResponse({ type: ApiErrorDto })
@@ -80,6 +82,7 @@ export class PostController {
     operationId: 'updatePost',
     tags: ['post'],
   })
+  @ApiSecurity('bearer')
   @ApiUnauthorizedResponse({ type: ApiErrorDto })
   @ApiBadRequestResponse({ type: ApiErrorDto })
   public async update(
@@ -96,6 +99,7 @@ export class PostController {
     operationId: 'removePost',
     tags: ['post'],
   })
+  @ApiSecurity('bearer')
   @ApiUnauthorizedResponse({ type: ApiErrorDto })
   public async remove(@Param('id', ParseUUIDPipe) id: string) {
     await this.postService.remove(id);

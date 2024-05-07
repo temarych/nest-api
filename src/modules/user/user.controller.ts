@@ -11,6 +11,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiSecurity,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ApiErrorDto } from '@typings/ApiErrorDto';
@@ -31,6 +32,7 @@ export class UserController {
     operationId: 'getMe',
     tags: ['user'],
   })
+  @ApiSecurity('bearer')
   @ApiOkResponse({ type: UserDto })
   @ApiUnauthorizedResponse({ type: ApiErrorDto })
   public async getMe(@Req() request) {

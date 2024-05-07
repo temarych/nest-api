@@ -7,39 +7,50 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@/auth/auth.guard';
 import { PostService } from './post.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { CreatePostRequestDto } from './dto/create-post.request.dto';
+import { UpdatePostRequestDto } from './dto/update-post.request.dto';
+import { PostDto } from './dto/post.dto';
 
 @Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  public async create(@Body() createPostDto: CreatePostDto) {
-    return await this.postService.create(createPostDto);
+  @UseGuards(AuthGuard)
+  public async create(@Body() data: CreatePostRequestDto) {
+    const post = await this.postService.create(data);
+    return new PostDto(post);
   }
 
   @Get()
   public async findAll() {
-    return await this.postService.findAll();
+    const posts = await this.postService.findAll();
+    return posts.map((post) => new PostDto(post));
   }
 
   @Get(':id')
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.postService.findOne(id);
+    const post = await this.postService.findOne(id);
+    if (!post) throw new NotFoundException('post-not-found');
+    return new PostDto(post);
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
   public async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updatePostDto: UpdatePostDto,
+    @Body() data: UpdatePostRequestDto,
   ) {
-    await this.postService.update(id, updatePostDto);
+    await this.postService.update(id, data);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   public async remove(@Param('id', ParseUUIDPipe) id: string) {
     await this.postService.remove(id);
   }

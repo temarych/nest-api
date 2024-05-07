@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -12,23 +10,35 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  public async create(createUserDto: CreateUserDto): Promise<User> {
-    return await this.userRepository.save(createUserDto);
+  public async create(data: Omit<User, 'id'>): Promise<User> {
+    return await this.userRepository.save(data);
   }
 
   public async findAll(): Promise<User[]> {
     return await this.userRepository.find();
   }
 
-  public async findOne(id: string): Promise<User> {
+  public async findOne(id: string): Promise<User | null> {
     return await this.userRepository.findOneBy({ id });
   }
 
-  public async update(id: string, updateUserDto: UpdateUserDto): Promise<void> {
-    await this.userRepository.update(id, updateUserDto);
+  public async findOneByEmail(email: string): Promise<User | null> {
+    return await this.userRepository.findOneBy({ email });
   }
 
-  public async remove(id: string) {
+  public async isEmailUnique(email: string) {
+    const isEmailUsed = await this.userRepository.existsBy({ email });
+    return !isEmailUsed;
+  }
+
+  public async update(
+    id: string,
+    data: Partial<Omit<User, 'id' | 'password'>>,
+  ): Promise<void> {
+    await this.userRepository.update(id, data);
+  }
+
+  public async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
   }
 }

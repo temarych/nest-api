@@ -1,46 +1,38 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
+  NotFoundException,
   Param,
-  Delete,
   ParseUUIDPipe,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@/auth/auth.guard';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserDto } from './dto/user.dto';
+import { User } from './entities/user.entity';
 
-@Controller('user')
+@Controller()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  public async create(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.create(createUserDto);
+  @Get('/me')
+  @UseGuards(AuthGuard)
+  public async getMe(@Req() request) {
+    const user = request.user as User;
+    return new UserDto(user);
   }
 
-  @Get()
+  @Get('/users')
   public async findAll() {
-    return await this.userService.findAll();
+    const users = await this.userService.findAll();
+    return users.map((user) => new UserDto(user));
   }
 
-  @Get(':id')
+  @Get('/users/:id')
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.userService.findOne(id);
-  }
-
-  @Patch(':id')
-  public async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    await this.userService.update(id, updateUserDto);
-  }
-
-  @Delete(':id')
-  public async remove(@Param('id', ParseUUIDPipe) id: string) {
-    await this.userService.remove(id);
+    const user = await this.userService.findOne(id);
+    if (!user) throw new NotFoundException('user-not-found');
+    return new UserDto(user);
   }
 }

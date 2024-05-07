@@ -4,10 +4,12 @@ import { ConfigModule } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { PostModule } from './post/post.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       envFilePath: ['.env', '.env.local'],
     }),
     TypeOrmModule.forRoot({
@@ -18,6 +20,7 @@ import { UserModule } from './user/user.module';
     }),
     PostModule,
     UserModule,
+    AuthModule,
   ],
 })
 export class AppModule {

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@modules/auth/auth.guard';
-import { ApiErrorCode } from '@typings/ApiErrorCode';
+import { ApiErrorCause } from '@typings/ApiErrorCause';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { User } from './entities/user.entity';
@@ -64,7 +64,7 @@ export class UserController {
   })
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const user = await this.userService.findOne(id);
-    if (!user) throw new NotFoundException(ApiErrorCode.UserNotFound);
+    if (!user) throw new NotFoundException(ApiErrorCause.UserNotFound);
     return new UserDto(user);
   }
 }

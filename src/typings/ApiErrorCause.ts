@@ -1,4 +1,4 @@
-export enum ApiErrorCode {
+export enum ApiErrorCause {
   IncorrectPassword = 'invalid-password',
   UserNotFound = 'user-not-found',
   EmailNotUnique = 'email-not-unique',

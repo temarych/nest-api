@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Result } from '@typings/result';
+import { Result } from '@typings/Result';
 import { UserService } from '@modules/user/user.service';
 import { HashService } from './hash/hash.service';
 import { JwtService } from './jwt/jwt.service';

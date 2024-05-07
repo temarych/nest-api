@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { ApiErrorCode } from '@typings/ApiErrorCode';
 import { AuthService } from './auth.service';
 import {
   AccessTokenExpiredError,
@@ -21,21 +22,21 @@ export class AuthGuard implements CanActivate {
     const accessToken = this.extractAccessTokenFromHeader(request);
 
     if (!accessToken) {
-      throw new UnauthorizedException('no-access-token');
+      throw new UnauthorizedException(ApiErrorCode.NoAccessToken);
     }
 
     const [result, error] = await this.authService.authorize({ accessToken });
 
     if (error && error instanceof AccessTokenExpiredError) {
-      throw new UnauthorizedException('access-token-expired');
+      throw new UnauthorizedException(ApiErrorCode.ExpiredAccessToken);
     }
 
     if (error && error instanceof AccessTokenInvalidError) {
-      throw new UnauthorizedException('access-token-invalid');
+      throw new UnauthorizedException(ApiErrorCode.InvalidAccessToken);
     }
 
     if (error && error instanceof UserNotFoundError) {
-      throw new UnauthorizedException('user-not-found');
+      throw new UnauthorizedException(ApiErrorCode.UserNotFound);
     }
 
     request['user'] = result!.user;

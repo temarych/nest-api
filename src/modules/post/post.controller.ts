@@ -14,6 +14,7 @@ import {
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { User } from '@modules/user/entities/user.entity';
 import { AuthGuard } from '@modules/auth/auth.guard';
+import { ApiErrorCode } from '@typings/ApiErrorCode';
 import { PostService } from './post.service';
 import { CreatePostRequestDto } from './dto/create-post.request.dto';
 import { UpdatePostRequestDto } from './dto/update-post.request.dto';
@@ -70,7 +71,7 @@ export class PostController {
   })
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const post = await this.postService.findOne(id);
-    if (!post) throw new NotFoundException('post-not-found');
+    if (!post) throw new NotFoundException(ApiErrorCode.PostNotFound);
     return new PostDto(post);
   }
 

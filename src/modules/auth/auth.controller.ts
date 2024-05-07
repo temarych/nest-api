@@ -1,5 +1,6 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiErrorCode } from '@typings/ApiErrorCode';
 import { AuthService } from './auth.service';
 import { SignUpRequestDto } from './dto/signup.request.dto';
 import { LogInRequestDto } from './dto/login.request.dto';
@@ -30,7 +31,7 @@ export class AuthController {
     const [result, error] = await this.authService.signUp(data);
 
     if (error && error instanceof EmailNotUniqueError) {
-      throw new UnauthorizedException('email-not-unique');
+      throw new UnauthorizedException(ApiErrorCode.EmailNotUnique);
     }
 
     return new SignUpResponseDto(result!);
@@ -51,11 +52,11 @@ export class AuthController {
     const [result, error] = await this.authService.logIn(data);
 
     if (error && error instanceof UserNotFoundError) {
-      throw new UnauthorizedException('user-not-found');
+      throw new UnauthorizedException(ApiErrorCode.UserNotFound);
     }
 
     if (error && error instanceof IncorrectPasswordError) {
-      throw new UnauthorizedException('incorrect-password');
+      throw new UnauthorizedException(ApiErrorCode.IncorrectPassword);
     }
 
     return new LogInResponseDto(result!);

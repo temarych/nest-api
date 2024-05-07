@@ -12,8 +12,8 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { User } from '@/user/entities/user.entity';
-import { AuthGuard } from '@/auth/auth.guard';
+import { User } from '@modules/user/entities/user.entity';
+import { AuthGuard } from '@modules/auth/auth.guard';
 import { PostService } from './post.service';
 import { CreatePostRequestDto } from './dto/create-post.request.dto';
 import { UpdatePostRequestDto } from './dto/update-post.request.dto';

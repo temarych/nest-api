@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { Injectable } from '@nestjs/common';
-import { Result } from '@/typings/result';
+import { Result } from '@typings/result';
 import { IJwtPayload } from './jwt.service.types';
 import { JwtExpiredError, JwtInvalidError } from './jwt.service.errors';
 

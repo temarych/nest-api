@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Post } from '@/post/entities/post.entity';
+import { Post } from '@modules/post/entities/post.entity';
 
 @Entity()
 export class User {

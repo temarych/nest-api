@@ -9,8 +9,10 @@ import {
   ParseUUIDPipe,
   NotFoundException,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { User } from '@/user/entities/user.entity';
 import { AuthGuard } from '@/auth/auth.guard';
 import { PostService } from './post.service';
 import { CreatePostRequestDto } from './dto/create-post.request.dto';
@@ -33,8 +35,9 @@ export class PostController {
     description: 'Successful operation',
     type: PostDto,
   })
-  public async create(@Body() data: CreatePostRequestDto) {
-    const post = await this.postService.create(data);
+  public async create(@Req() request, @Body() data: CreatePostRequestDto) {
+    const user = request.user as User;
+    const post = await this.postService.create({ ...data, authorId: user.id });
     return new PostDto(post);
   }
 

@@ -1,6 +1,12 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { ApiErrorCause } from '@typings/ApiErrorCause';
+import { ApiErrorDto } from '@typings/ApiErrorDto';
 import { AuthService } from './auth.service';
 import { SignUpRequestDto } from './dto/signup.request.dto';
 import { LogInRequestDto } from './dto/login.request.dto';
@@ -22,11 +28,9 @@ export class AuthController {
     operationId: 'signup',
     tags: ['auth'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-    type: SignUpResponseDto,
-  })
+  @ApiOkResponse({ type: SignUpResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiBadRequestResponse({ type: ApiErrorDto })
   public async signUp(@Body() data: SignUpRequestDto) {
     const [result, error] = await this.authService.signUp(data);
 
@@ -45,11 +49,9 @@ export class AuthController {
     operationId: 'login',
     tags: ['auth'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-    type: LogInResponseDto,
-  })
+  @ApiOkResponse({ type: LogInResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiBadRequestResponse({ type: ApiErrorDto })
   public async logIn(@Body() data: LogInRequestDto) {
     const [result, error] = await this.authService.logIn(data);
 

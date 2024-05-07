@@ -7,7 +7,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { ApiErrorDto } from '@typings/ApiErrorDto';
 import { AuthGuard } from '@modules/auth/auth.guard';
 import { ApiErrorCause } from '@typings/ApiErrorCause';
 import { UserService } from './user.service';
@@ -25,11 +31,8 @@ export class UserController {
     operationId: 'getMe',
     tags: ['user'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-    type: UserDto,
-  })
+  @ApiOkResponse({ type: UserDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
   public async getMe(@Req() request) {
     const user = request.user as User;
     return new UserDto(user);
@@ -41,11 +44,7 @@ export class UserController {
     operationId: 'getUsers',
     tags: ['user'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-    type: [UserDto],
-  })
+  @ApiOkResponse({ type: [UserDto] })
   public async findAll() {
     const users = await this.userService.findAll();
     return users.map((user) => new UserDto(user));
@@ -57,11 +56,8 @@ export class UserController {
     operationId: 'getUser',
     tags: ['user'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-    type: UserDto,
-  })
+  @ApiOkResponse({ type: UserDto })
+  @ApiNotFoundResponse({ type: ApiErrorDto })
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const user = await this.userService.findOne(id);
     if (!user) throw new NotFoundException(ApiErrorCause.UserNotFound);

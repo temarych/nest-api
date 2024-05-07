@@ -11,7 +11,13 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { User } from '@modules/user/entities/user.entity';
 import { AuthGuard } from '@modules/auth/auth.guard';
 import { ApiErrorCause } from '@typings/ApiErrorCause';
@@ -19,6 +25,7 @@ import { PostService } from './post.service';
 import { CreatePostRequestDto } from './dto/create-post.request.dto';
 import { UpdatePostRequestDto } from './dto/update-post.request.dto';
 import { PostDto } from './dto/post.dto';
+import { ApiErrorDto } from '@typings/ApiErrorDto';
 
 @Controller('posts')
 export class PostController {
@@ -31,11 +38,9 @@ export class PostController {
     operationId: 'createPost',
     tags: ['post'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-    type: PostDto,
-  })
+  @ApiOkResponse({ type: PostDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiBadRequestResponse({ type: ApiErrorDto })
   public async create(@Req() request, @Body() data: CreatePostRequestDto) {
     const user = request.user as User;
     const post = await this.postService.create({ ...data, authorId: user.id });
@@ -48,11 +53,7 @@ export class PostController {
     operationId: 'getPosts',
     tags: ['post'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-    type: [PostDto],
-  })
+  @ApiOkResponse({ type: [PostDto] })
   public async findAll() {
     const posts = await this.postService.findAll();
     return posts.map((post) => new PostDto(post));
@@ -64,11 +65,8 @@ export class PostController {
     operationId: 'getPost',
     tags: ['post'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-    type: PostDto,
-  })
+  @ApiOkResponse({ type: PostDto })
+  @ApiNotFoundResponse({ type: ApiErrorDto })
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const post = await this.postService.findOne(id);
     if (!post) throw new NotFoundException(ApiErrorCause.PostNotFound);
@@ -82,10 +80,8 @@ export class PostController {
     operationId: 'updatePost',
     tags: ['post'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-  })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiBadRequestResponse({ type: ApiErrorDto })
   public async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: UpdatePostRequestDto,
@@ -100,10 +96,7 @@ export class PostController {
     operationId: 'removePost',
     tags: ['post'],
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Successful operation',
-  })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
   public async remove(@Param('id', ParseUUIDPipe) id: string) {
     await this.postService.remove(id);
   }

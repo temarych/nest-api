@@ -71,7 +71,13 @@ export class PostController {
   @ApiNotFoundResponse({ type: ApiErrorDto })
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const post = await this.postService.findOne(id);
-    if (!post) throw new NotFoundException(ApiErrorCause.PostNotFound);
+
+    if (!post) {
+      throw new NotFoundException('Post not found', {
+        cause: ApiErrorCause.PostNotFound,
+      });
+    }
+
     return new PostDto(post);
   }
 

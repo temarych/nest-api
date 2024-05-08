@@ -22,21 +22,29 @@ export class AuthGuard implements CanActivate {
     const accessToken = this.extractAccessTokenFromHeader(request);
 
     if (!accessToken) {
-      throw new UnauthorizedException(ApiErrorCause.NoAccessToken);
+      throw new UnauthorizedException('No access token', {
+        cause: ApiErrorCause.NoAccessToken,
+      });
     }
 
     const [result, error] = await this.authService.authorize({ accessToken });
 
     if (error && error instanceof AccessTokenExpiredError) {
-      throw new UnauthorizedException(ApiErrorCause.ExpiredAccessToken);
+      throw new UnauthorizedException('Expired access token', {
+        cause: ApiErrorCause.ExpiredAccessToken,
+      });
     }
 
     if (error && error instanceof AccessTokenInvalidError) {
-      throw new UnauthorizedException(ApiErrorCause.InvalidAccessToken);
+      throw new UnauthorizedException('Invalid access token', {
+        cause: ApiErrorCause.InvalidAccessToken,
+      });
     }
 
     if (error && error instanceof UserNotFoundError) {
-      throw new UnauthorizedException(ApiErrorCause.UserNotFound);
+      throw new UnauthorizedException('User not found', {
+        cause: ApiErrorCause.UserNotFound,
+      });
     }
 
     request['user'] = result!.user;

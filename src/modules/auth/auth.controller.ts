@@ -56,11 +56,15 @@ export class AuthController {
     const [result, error] = await this.authService.logIn(data);
 
     if (error && error instanceof UserNotFoundError) {
-      throw new UnauthorizedException(ApiErrorCause.UserNotFound);
+      throw new UnauthorizedException('User not found', {
+        cause: ApiErrorCause.UserNotFound,
+      });
     }
 
     if (error && error instanceof IncorrectPasswordError) {
-      throw new UnauthorizedException(ApiErrorCause.IncorrectPassword);
+      throw new UnauthorizedException('Incorrect password', {
+        cause: ApiErrorCause.IncorrectPassword,
+      });
     }
 
     return new LogInResponseDto(result!);

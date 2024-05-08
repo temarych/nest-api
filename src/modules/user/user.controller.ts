@@ -62,7 +62,13 @@ export class UserController {
   @ApiNotFoundResponse({ type: ApiErrorDto })
   public async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const user = await this.userService.findOne(id);
-    if (!user) throw new NotFoundException(ApiErrorCause.UserNotFound);
+
+    if (!user) {
+      throw new NotFoundException('User not found', {
+        cause: ApiErrorCause.UserNotFound,
+      });
+    }
+
     return new UserDto(user);
   }
 }
